@@ -74,6 +74,7 @@ you must add user roles before any users can be added to the site
 the minimum must be 
 
 id: 1 -> User
+
 id: 2 -> Admin
 
 -----------------------------------------------------
