@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="main">
+    <div id="first"><img src="{{ url_for('static', filename='borrowimage.png') }}"></div>
+
+    <div class="title">
+        <h1>3 Steps to Using Neighbourfy:</h1>
+    </div>
+
+    <div class="title">
+        <div class="left">
+            <h1><span>Step 1:</span> Sign Up</h1>
+            <h1><span>Step 2:</span> Request a Tool</h1>
+            <h1><span>Step 3:</span> Collect and Use</h1>
+        </div>
+    </div>
+
+    <div class="green-line"></div>
+
+    <div class="title">
+        <h1>Who are Neighbourfy?</h1>
+    </div>
+
+    <div class="text">
+    <p>Neighbourfy is an independent small project lead by a group of students from Cardiff University. The aim is to allow for local communities to be able to lend and borrow tools of any type. Not only is this method cheaper, it is also a much more environmentally friendly solution.
+        The members of the Neighbourfy team want everyone to be able to share their community and build together.
+        </p>
+    </div>
+
+
+</div>
+
+    
+{% endblock %}

@@ -1,0 +1,175 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div>
+        <H1>Register</H1>
+
+        <div class="form">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset>
+                <div>
+                    {{ form.displayname.label() }}
+                
+                    </br>
+
+                    <div class="padding">
+                    {% if form.displayname.errors %}
+                        {{ form.displayname()}}
+                        <div>
+                            {% for error in form.displayname.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}                        
+                        {{ form.displayname() }}
+                    {% endif %}
+                    </div>
+                </div>
+                </br>
+
+                <div>
+                    {{ form.email.label() }}
+                
+                    </br>
+                    
+                    <div class="padding">
+                    {% if form.email.errors %}
+                        {{ form.email()}}
+                        <div>
+                            {% for error in form.email.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}                        
+                        {{ form.email() }}
+                    {% endif %}
+                    </div>
+                </div>
+                </br>
+                <div>
+                    {{ form.firstname.label() }}
+                
+                    </br>
+                    
+                    <div class="padding">
+                    {% if form.firstname.errors %}
+                        {{ form.firstname()}}
+                        <div>
+                            {% for error in form.firstname.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}                        
+                        {{ form.firstname() }}
+                    {% endif %}
+                    </div>
+                </div>
+                </br>
+                <div>
+                    {{ form.lastname.label() }}
+                
+                    </br>
+                
+                    <div class="padding">
+                    {% if form.lastname.errors %}
+                        {{ form.lastname()}}
+                        <div>
+                            {% for error in form.lastname.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}                        
+                        {{ form.lastname() }}
+                    {% endif %}
+                    </div>
+                </div>
+                </br>
+                <div>
+                    {{ form.postcode.label() }}
+                
+                    </br>
+                
+                    {% if form.postcode.errors %}
+                        {{ form.postcode()}}
+                        <div>
+                            {% for error in form.postcode.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}                        
+                        {{ form.postcode() }}
+                    {% endif %}
+                </div>
+                </br>
+                <div>
+                    {{ form.password.label() }}
+                
+                    </br>
+                
+                    <div class="padding">
+                    {% if form.password.errors %}
+                        {{ form.password()}}
+                        <div>
+                            {% for error in form.password.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}                        
+                        {{ form.password() }}
+                    {% endif %}
+                    </div>
+                </div>
+                </br>
+                <div>
+                    {{ form.confirm_password.label() }}
+                
+                    </br>
+                
+                    <div class="padding">
+                    {% if form.confirm_password.errors %}
+                        {{ form.confirm_password()}}
+                        <div>
+                            {% for error in form.confirm_password.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}                        
+                        {{ form.confirm_password() }}
+                    {% endif %}
+                    </div>
+                </div>
+            </fieldset>
+
+            </br>
+            
+            <div class="padding">
+            <div>
+                {{ form.submit( class='btn' ) }}
+            </div>
+            </div>
+        </form>
+        </div>
+    </div>
+
+    </br>
+
+    <div>
+        Already have an account? <a href="{{ url_for('login') }}">Login</a>
+    </div>
+    
+
+    <style>
+        /*#email, #displayname, #firstname, #lastname, #postcode, #password, #confirm_password{*/
+        input[type=text], input[type=password]{
+            font-weight: bold;
+            color: green;
+            font-size: larger;
+            border: 3px solid #60A838;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+    </style>
+
+
+{% endblock content %}

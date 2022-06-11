@@ -1,0 +1,21 @@
+{% extends "admin/admin_dashboard.html" %}
+{% block admin_content %}
+    <div class="list-items"></div>
+    <form method="POST" action="" enctype="multipart/form-data">
+        <p>
+            User: {{ user.displayname }}
+        </p>
+        <p>
+            Role:
+            <select name="role" id="role" required>
+                <option value="">Select Role</option>
+                {% for role in roles %}
+                    <option value="{{ role.id }}" {% if (role.id == current_role) %} selected {% endif %}>{{ role.role }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p>
+            <input type="submit" value="submit"/>
+        </p>
+    </form>
+{% endblock admin_content %}

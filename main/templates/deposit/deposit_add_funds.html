@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Add funds</h1>
+
+    <br>
+
+    <h4>Note: 100 Tokens is equivlent to £1</h4>
+
+    <br>
+    <br>
+
+    <div>
+        <div>
+            <form method="POST" action="" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <fieldset> 
+                    <div>
+                        {{ form.ammount.label() }}
+                        
+                        </br>
+
+                        <div class="padding">
+                            £ {{ form.ammount(id='add_token_ammount') }}
+        
+                            {% if form.ammount.errors %}
+                                <div class="padding">
+                                    {% for error in form.ammount.errors %}
+                                        <span style="color: red;">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <br>
+
+                    <h2>Card details</h2>
+
+                    
+                    <div>
+                        {{ form.card_name.label() }}
+                        
+                        </br>
+                        {{ form.card_name(id='add_token_expire_data') }}
+    
+                        {% if form.card_name.errors %}
+                            <div>
+                                {% for error in form.card_name.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    </br>
+                    <div>
+                        {{ form.card_num.label() }}
+                        
+                        </br>
+                        {{ form.card_num(id='add_token_expire_data') }}
+    
+                        {% if form.card_num.errors %}
+                            <div>
+                                {% for error in form.card_num.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    </br>
+                    <div>
+                        {{ form.card_cvv.label() }}
+                        
+                        </br>
+                        {{ form.card_cvv(id='add_token_expire_data') }}
+    
+                        {% if form.card_cvv.errors %}
+                            <div>
+                                {% for error in form.card_cvv.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    </br>
+                    <div>
+                        {{ form.expire_date.label() }}
+                        
+                        </br>
+                        {{ form.expire_date(id='add_token_expire_data') }}
+    
+                        {% if form.expire_date.errors %}
+                            <div>
+                                {% for error in form.expire_date.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    </br>
+                </fieldset>
+
+                </br>
+
+                <div>
+                    {{ form.submit( class='btn' ) }}
+                </div>
+            </form>
+        </div>
+    </div>
+    
+{% endblock %}

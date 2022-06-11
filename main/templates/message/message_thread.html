@@ -1,0 +1,235 @@
+{% extends "layout.html" %}
+{% block content %}
+<style>
+    .message{
+        /*border: 1px solid red;
+        margin: 10px;*/
+        padding: 15px 0;
+    }
+    .message-name{
+        font-weight: 600;
+    }
+    .message-date{
+        color: gray;
+    }
+    .admin-user{
+        color: red;
+    }
+</style>
+
+    <div class="tool">
+        <style>
+            .tool-container {
+                display: grid;
+                grid-template-columns: repeat(2,1fr);
+                grid-template-rows: 1fr;
+                /* height: 100vh; */
+                grid-template-areas:
+                    'toolImg toolContent'
+                ;
+                margin: 0 auto;
+                margin-bottom: 50px;
+            }
+    
+            a.borrow-btn{
+                background-color: #e2af40; 
+                padding: 8px 15px;
+                border-radius: 7px;
+                color: rgb(0, 0, 0);
+                text-decoration: none;
+            }
+    
+            a.borrow-btn-disabled{
+                background-color: #a09e9e; 
+                color: #fff;
+                text-decoration: none;
+                cursor: default; 
+                user-select: none;
+            }
+            
+            .tool-img{
+                grid-area: toolImg;
+            }
+    
+            .tool-img-img{
+                max-width: 400px;
+            }
+    
+            
+            .review-container {
+                display: grid;
+                grid-template-columns: repeat(3,1fr);
+                grid-template-rows: 1fr;
+                /* height: 100vh; */
+                grid-template-areas:
+                    'reviewImg reviewContent reviewContent'
+                ;
+                margin: 0 auto;
+                margin-bottom: 2rem;
+                background-color: #b8b7b7;
+                padding: 2.5rem;
+            }
+            
+            .review-img{
+                grid-area: reviewImg;
+                text-align: center;
+            }
+    
+            .review-img-img{
+                max-width: 100%;
+            }
+    
+            .review-text-color{
+                color: rgb(46, 46, 46);
+            }
+    
+            .review-title{
+                font-size: 1.25rem;
+                padding-bottom: 0.5rem;
+            }
+    
+            .review-user-btn{
+                margin-top: 0.5rem;
+                margin-bottom: -0.6rem;
+            }
+    
+            .review-user-btn a{
+                padding: 0.4rem 1.5rem;
+                background-color: white;
+                color: black;
+                text-decoration: none;
+            }
+    
+            .review-content{
+                grid-area: reviewContent;
+                padding-left: 3rem;
+            }
+    
+            .review-content-inner{
+                display: grid;
+                grid-template-columns: repeat(3,1fr);
+                grid-template-rows: 1fr;
+                /* height: 100vh; */
+                grid-template-areas:
+                    'reviewContentLeft reviewContentRight .'
+                ;
+            }
+    
+            .review-content-left{
+                grid-area: reviewContentLeft;
+            }
+    
+            .review-content-right{
+                grid-area: reviewContentRight;
+            }
+        </style>
+        <!-- temp styles for now - Ellie combine this with your CSS or delete it and go wild -->
+    
+        
+        <!-- Tool Stuff -->
+        <div class="tool-container">            
+        {% if the_tool_swap.tool.feature_image|length > 0 %}
+            <div>
+                <img class="tool-img-img" height="180px" src="{{ url_for('static', filename = 'img/' + the_tool_swap.tool.feature_image + '.jpg') }}">
+            </div>
+        {% endif %}
+    
+            <div>
+                <h2>{{ the_tool_swap.tool.title.capitalize() }}</h2>
+                <p>
+                    <strong>Posted on:</strong> {{ the_tool_swap.tool.listed_date.date().strftime('%d/%m/%Y') }}
+                </p>
+                <p>
+                    <strong>Deposit:</strong> {{ the_tool_swap.deposit }} Tokens ( equivalent to £{{ "%.2f"|format(the_tool_swap.tool.deposit/100) }} )
+                </p>
+                <p>
+                    <strong>Description:</strong> {{ the_tool_swap.tool.description  | truncate(100) | safe }}
+                </p>
+            </div>
+        </div>        
+        <a class='btn' href="{{ url_for('single_tool', tool_id = the_tool_swap.tool_id ) }}">See tool</a>
+    </div>
+    <br>
+    <hr>
+    <!-- Deposit Stuff -->
+    <div>
+        {% if the_tool_swap.lender == current_user %}
+            <h3>Ready to confirm a return date?</h3>
+            {% if not the_tool_swap.return_date %}
+                <a href="{{ url_for('confirm_tool_swap', thread_id = thread_id) }}">Confirm Date</a>
+            {% elif the_tool_swap.return_photo|length > 0 %}
+                <p>Tool Returned Successfully</p>
+            {% else %}
+                Return date confirmed for ({{ the_tool_swap.return_date.strftime('%d %b %Y') }})
+            {% endif %}
+        {% else %}
+            {% if the_tool_swap.return_date and the_tool_swap.is_paid == 0 %}
+                <p>Return date confirmed for ({{ the_tool_swap.return_date.strftime('%d %b %Y') }})</p>
+                <a href="{{ url_for('pay_deposit', tool_id = the_tool_swap.id) }}">Pay deposit now</a>
+            {% elif the_tool_swap.is_paid == 1 and the_tool_swap.return_photo|length == 0 %}
+                <p>Deposit Paid</p>
+                <p>Return date confirmed for ({{ the_tool_swap.return_date.strftime('%d %b %Y') }})</p>
+                <a href="{{ url_for('return_tool', swap_id = the_tool_swap.id)}}">Return Tool now</a>
+                <br>
+                <br>
+            {% elif the_tool_swap.return_photo|length > 0 %}
+                <p>Tool Returned Successfully</p>
+            {% else %}
+                <p>Waiting for confirmation</p>
+            {% endif %}
+        {% endif %}
+    </div>
+    <hr>
+
+    <!-- Message Stuff -->
+    <br>
+    {% if messages | length > 0 %}
+        {% for message in messages %}
+            {% if message.sender == current_user %}
+            <div class="message-card">
+            {% else %}
+            <div class="message-card-sender"> <!-- to move to the other side of page - to do later -->
+            {% endif %}
+                <div class="message">
+                    <span class="message-name">{{ message.sender.displayname }} {% if message.sender.user_role_id == 2 %}<span class="admin-user">(ADMIN)</span>{% endif %}</span>
+                    <span class="message-date">({{ message.date_sent.strftime('%H:%M:%S | %d %b %Y') }})</span>
+                    <br>
+                    <span class="message-message">{{ message.message }}</span>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    <br>
+    <hr>
+    <br>
+
+    <!-- Send Message Stuff -->
+    <div class="send-message">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset>
+                <div>
+                    {{ form.message.label() }}
+    
+                    {% if form.message.errors %}
+                        {{ form.message()}}
+                        <div>message
+                            {% for error in form.message.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.message() }}
+                    {% endif %}
+                </div>
+                
+            </fieldset>
+
+            </br>
+
+            <div>
+                {{ form.submit( class='btn' ) }}
+            </div>
+        </form>
+    </div>
+{% endblock %}

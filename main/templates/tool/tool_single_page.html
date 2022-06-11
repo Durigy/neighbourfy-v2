@@ -1,0 +1,225 @@
+{% extends "layout.html" %}
+{% block content %}
+    <!-- Tool Stuff -->
+    <div class="tool-container">
+        {#% if tool.feature_image|length > 0 %#}
+            <!-- <div class="tool-img" >
+                <img class="tool-img-img" src="{{ url_for('static', filename='img/' + tool.feature_image + '.jpg') }}">
+            </div> -->
+        {#% else %#}
+        <div Class="padding">
+            <div Class="picture">
+              <img class="tool-img-img" src="{{ url_for('static', filename='img/' + tool.feature_image + '.jpg') }}">
+            </div>
+        </div>
+        {#% endif %#}
+
+        <div>
+            <div Class="padding">
+            <h2>{{ tool.title.capitalize() }}</h2>
+            <p>
+                <strong>Posted on:</strong> {{ tool.listed_date.date().strftime('%d/%m/%Y') }}
+            </p>
+            <p>
+                <strong>Deposit:</strong> {{ tool.deposit }} Tokens ( equivalent to £{{ "%.2f"|format(tool.deposit/100) }} )
+            </p>
+            <p>
+                <strong>Description:</strong> {{ tool.description }}
+            </p>
+            </div>
+
+            {% if tool.user_id == current_user.id %}
+               <!-- <div Class="padding"><a class="borrow-btn borrow-btn-disabled">You already own this tool</a></div>  -->
+               <div Class="padding"><a class="borrow-btn" href="{{ url_for('update_tool', tool_id = tool_id ) }}">Edit Tool</a></div> 
+            {% elif current_user.user_role_id == 2 %}
+            <div Class="padding"><a class="borrow-btn borrow-btn-disabled">Sorry Admin you can't borrow tools</a></div> 
+            {% elif current_tool_swap == True %}
+            <div Class="padding">
+              <a class="borrow-btn borrow-btn-disabled">You are alreay borrowing this tool</a>
+            </div> 
+                <br>
+                <br>
+                <div Class="padding"><a class="borrow-btn" href="{{ url_for('message', thread_id = message_thread_id ) }}">See active tool swap</a></div> 
+            {% else %}
+                <div Class="padding"><a class="borrow-btn" href="{{ url_for('create_tool_swap', tool_id = tool_id ) }}">Request Tool</a></div> 
+            {% endif %}
+            
+        
+        </div>
+    </div>
+    
+    <div>
+        <span style="border: 2px solid #e2af40; border-radius:7px; padding: 5px; padding-left: 0;"><span class="noselect" style="background-color: #e2af40; padding:5px; color: rgb(53, 53, 53); font-weight:bold; margin-right:5px;">Share this tool:</span><a href="http://nebur.fi/{{ tool_id }}">http://nebur.fi/{{ tool_id }}</a></span>
+    </div>
+    <br>
+    <br>
+
+    <!--MAP STUFF-->
+
+    <div style="height: 50vh; padding-bottom: 5vh;">
+    <div id="map_container" style="width: 100%; height: 100%; ">
+
+        <link rel="stylesheet" href="https://js.arcgis.com/4.23/esri/themes/light/main.css">
+        <script src="https://js.arcgis.com/4.23/"></script>
+        <script>
+            require([
+            "esri/config",
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/rest/locator",
+            "esri/Graphic",
+            "esri/geometry/Circle"], function (esriConfig, Map, MapView, locator, Graphic, Circle) {
+      
+                esriConfig.apiKey = "AAPK2d7ea506e9dd4460972075022931baceyfK3TfbIi8OlxIYIZ9yUiPAFO3MftrH3MDUyVfSwhZezP-80g64c0ZgSx0FOdXLh";
+
+                const map = new Map({
+                  basemap: "arcgis-navigation" // Basemap layer service
+                });
+        
+                const view = new MapView({
+                  map: map,
+                  center: [-3.169472, 51.480526], // Cardiff Longitude, latitude
+                  zoom: 15, // Zoom level
+                  container: "map_container" // Div element
+                });
+
+                var lat;
+                var long;
+
+                const locatorUrl = "http://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";
+
+                {% if tool.author.postcode != None %}
+
+                    locator.addressToLocations(locatorUrl, {
+                        address: {
+                            "address": "{{tool.author.postcode}} {{tool.author.city}} United Kingdom"
+                        }
+                    }).then(((results => { 
+                        
+                        lat = results[0].location.latitude;
+                        long = results[0].location.longitude;
+
+                        // center the view at location
+                        view.center = [long, lat];
+
+                        // add circle
+                        view.graphics.add(
+                            new Graphic({
+                                geometry: new Circle({
+                                    center: [long, lat],
+                                    geodesic: true,
+                                    numberOfPoints: 450,
+                                    radius: 0.15,
+                                    radiusUnit: "kilometers"
+                                }),
+                                symbol: {
+                                    type: "simple-fill",
+                                    style: "solid",
+                                    color: [100, 100, 255, 0.5],
+                                    outline: {
+                                        color: [0, 0, 0, 0]
+                                    }
+                                }
+                            })
+                        );
+                        
+                        view.popup.open({
+                            title: "Postcode: " + "{{tool.author.postcode}}",
+                            location: [long, lat]
+                        })
+
+                    })));
+
+                {% else %}
+                
+                    locator.addressToLocations(locatorUrl, {
+                        address: {
+                            "address": "Cardiff United Kingdom"
+                        }
+                    }).then(((results => { 
+                        lat = results[0].location.latitude;
+                        long = results[0].location.longitude;
+
+                        // center the view at location
+                        view.center = [long, lat];
+                    })))
+                
+                {% endif %}
+
+            });
+        </script>
+
+    </div>
+    </div>
+
+    <!-- Review Stuff -->
+    <div class="review-container">
+        <!-- {#% if tool.img|length > 0 %#} -->
+            <div class="review-img" >
+                {#% if tool.author.profile_pic|length > 0 %#}
+                    <!-- <div class="tool-img" > -->
+                        <!-- <img class="tool-img-img" src="{#{ url_for('static', filename='img/' + tool.author.profile_pic + '.jpg') }#}"> -->
+                    <!-- </div> -->
+                {#% else %#}
+                    <a href="#">
+                        <img class="review-img-img" src="{{ url_for('static', filename = 'img/' + tool.author.profile_pic + '.jpg') }}">
+                    </a>
+                {#% endif %#}
+            </div>
+        
+        <div class="review-content">
+            <div Class="padding">
+                <div class="review-title">
+                    <span class="review-text-color">
+                        {{ tool.author.displayname }}
+                    </span>
+                </div>
+            </div>
+            <div class="review-content-inner">
+                <div class="review-content-left">
+                    <span class="review-text-color">
+                        <strong>Rating:</strong> {% if tool.author.agv_rating > 0 %} {{ tool.author.agv_rating }}/5 {% else %} No ratings yet {% endif %}
+                    </span>
+                </div>
+
+                <div class="review-content-right">
+                    <span class="review-text-color" style="padding-left:5px">
+                        <strong>Joined:</strong> {{ tool.author.joined_date.strftime("%Y") }}
+                    </span>
+                </div>
+            </div>
+            <div>
+            <div Class="button-size">
+            <a class="borrow-btn" href="{{ url_for('account_public', user_id = tool.user_id) }}">View Profile</a>
+        </div>
+    </div>
+    </div>
+    </div>
+    
+    <!-- Other tools -->
+    {% if tool_posts %}
+        <h2>Other tools</h2>
+        {% for tool_post in tool_posts %}
+            <div style="border: 1px red solid; padding: 10px; margin-bottom: 10px; border-radius: 7px;">
+                {% if tool_post.feature_image|length > 0 %}
+                    <div>
+                        <a href="{{ url_for('single_tool', tool_id = tool_post.id ) }}">
+                            <img src="{{ url_for('static', filename='img/' + tool_post.feature_image + '.jpg') }}">
+                        </a>
+                    </div>
+                {% endif %}
+
+                <div>
+                    <h2>{{ tool_post.title.capitalize() }}</h2>
+                    <p>
+                        <strong>Posted on:</strong> {{ tool_post.listed_date.date() }}
+                    </p>
+                    <p>
+                        <strong>Description:</strong> {{ tool_post.description  | truncate(250) | safe }}
+                    </p>
+                    <a href="{{ url_for('single_tool', tool_id = tool_post.id ) }}">See tool</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

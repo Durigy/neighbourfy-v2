@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+    <form method="POST" action="{{url_for('search')}}">
+      {{form.hidden_tag()}}
+      <input type="search" placeholder="Search", name="searched" value="{{ searched }}">
+      <button type="submit">Search</button>
+    </form>
+    <br>
+    <br/>
+    <!-- <h2>You have searched for: -->
+    <h2>Showing results for: <em>{{searched}}</em></h2>
+    {% if posts%}
+    {% for tool_post in posts%}
+      <div style="border: 1px red solid; padding: 10px; margin-bottom: 10px; border-radius: 7px;">
+        {% if tool_post.feature_image|length > 0 %}
+            <div>
+                <a href="{{ url_for('single_tool', tool_id = tool_post.id ) }}">
+                    <img src="{{ url_for('static', filename='img/' + tool_post.feature_image + '.jpg') }}">
+                </a>
+            </div>
+        {% endif %}
+
+          <div>
+              <h2>{{ tool_post.title.capitalize() }}</h2>
+              <p>
+                  <strong>Posted on:</strong> {{ tool_post.listed_date.date() }}
+              </p>
+              <p>
+                  <strong>Description:</strong> {{ tool_post.description  | truncate(250) | safe }}
+              </p>
+              <a href="{{ url_for('single_tool', tool_id = tool_post.id ) }}">See tool</a>
+          </div>
+      </div>
+    {% endfor%}
+
+    {%else%}
+      Sorry, <strong>{{searched}}</strong> was not found
+    {%endif%}
+{% endblock %}

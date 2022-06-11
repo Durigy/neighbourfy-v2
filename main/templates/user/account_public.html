@@ -1,0 +1,245 @@
+{% extends "layout.html" %}
+{% block content %}
+    
+
+<div Class="profile">
+    <div Class="title">
+        <h1>Public Page</h1>
+        {% if current_user.is_authenticated %} {# otherwise there is an error that we are accessing 'user_role' from undefined object #}
+            {% if current_user.user_role.id == 2 %}
+                <span><a href="{{ url_for('admin')}}">Admin Dashboard</a></span>
+            {% endif %}
+        {% endif %}
+
+    </div>
+    
+    <div >
+        <div Class="padding">
+        <h1>User Information</h1>
+        </div>
+      
+        <div id="profile_details">
+            <div id="profile_pic_div">
+                {% if user.profile_pic|length > 0 %}
+                    <img class="profile_pic_img" src="{{ url_for('static', filename='img/' + user.profile_pic + '.jpg') }}">
+                {% else %}
+                    <span>Add a profile pic</span>
+                {% endif %}
+            </div>
+            <div Class="padding">
+                <h2 id="name">{{ user.displayname }}</h2>
+                <h3>Lives in: {{ user.city }}</h3>
+                <h3>Average Rating: 
+                    {% if average_rating != "No reviews yet." %}
+                        {{ average_rating }} / 5 &#9733; | {{ user.num_of_ratings}} Ratings
+                    
+                {% else %}
+                    {{ average_rating }}
+                {% endif %}
+
+            </h3>
+         </div>
+        
+
+        <h2 id="user_tools_header">Tools this user is lending...</h2>
+
+        {% if tools|length >= 1 %}
+            <div id="user_tools" style="width: 100%; margin: auto;">
+                <div class="container_out" style="height: 90%; width: 100%; margin: auto; overflow-x: auto; border: 5px solid black;">
+                    <!-- <div class="container_in" style="width: 150%; border: 5px solid green;"> -->
+                    <div class="container_in" style="width: {{ (540*tools|length, 1080)|max }}px; border: 5px solid #E2AF40; height: auto;">
+                        {% for tool in tools %}
+                            <div style="height: 100%; width: 525px; display:inline-block; margin-right: 2px; margin-left: 2px;">
+                                <table style="height: 100%; margin: auto;">
+                                    <tr>
+                                        {% if tool.feature_image|length > 0 %}
+                                            <td rowspan="3">
+                                                <a href="{{ url_for('single_tool', tool_id=tool.id) }}">
+                                                    <img class="tool_image" src="{{ url_for('static', filename='img/' + tool.feature_image + '.jpg') }}" alt="tool photo" style="display: inline-block;">
+                                                </a>
+                                            </td>
+                                        {% endif %}
+                                    
+                                        <td rowspan="3">
+            
+                                            <a style="display: block;" href="{{ url_for('single_tool', tool_id=tool.id) }}">
+                                                <span class="a_span">
+                                                    {{ tool.title }}
+                                                </span>
+                                            </a>
+            
+                                            <br>
+
+                                            {% if tool.user_id != current_user.id %}
+                                                <a class="a_buttons" style="display:block;" href="{{ url_for('single_tool', tool_id=tool.id) }}">
+                                                    <button>View Tool</button>
+                                                </a>
+                                            {% else %}
+                                                <!-- <a class="borrow-btn borrow-btn-disabled">You already own this tool</a>
+
+                                                <br>
+                                                <br> -->
+
+                                                <a class="a_buttons" href="{{ url_for('update_tool', tool_id = tool.id ) }}">
+                                                    <button>Edit Tool</button>
+                                                </a>
+                                            {% endif %}
+            
+                                            <br>
+                                            <br>
+                                            
+                                            {{ tool.description  | truncate(100) | safe }}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% elif owner_tools|length > 0 %}
+            <div id="user_tools" style="width: 100%; margin: auto;">
+                <div class="container_out" style="height: 90%; width: 100%; margin: auto; overflow-x: auto; border: 5px solid black;">
+                    <!-- <div class="container_in" style="width: 150%; border: 5px solid green;"> -->
+                    <div class="container_in" style="width: {{ (540*tools|length, 1080)|max }}px; border: 5px solid #E2AF40; height: auto;">
+                            
+                        {% for tool in tools %}
+                            <div style="height: 100%; width: 525px; display:inline-block; margin-right: 2px; margin-left: 2px;">
+                                <table style="height: 100%; margin: auto;">
+                                    <tr>
+                                        {% if tool.feature_image|length > 0 %}
+                                            <td rowspan="3">
+                                                <a href="{{ url_for('single_tool', tool_id=tool.id) }}">
+                                                    <img class="tool_image" src="{{ url_for('static', filename='img/' + tool.feature_image + '.jpg') }}" alt="tool photo" style="display: inline-block;">
+                                                </a>
+                                            </td>
+                                        {% endif %}
+                                    
+                                        <td rowspan="3">
+            
+                                            <a style="display: block;" href="{{ url_for('single_tool', tool_id=tool.id) }}">
+                                                <span class="a_span">
+                                                    {{tool.title}}
+                                                </span>
+                                            </a>
+            
+                                            <br>
+
+                                            {% if tool.user_id != current_user.id %}
+                                                <a class="a_buttons" style="display:block;" href="{{ url_for('single_tool', tool_id=tool.id) }}">
+                                                    <button>View Tool</button>
+                                                </a>
+                                            {% else %}
+                                                <a class="borrow-btn borrow-btn-disabled">You already own this tool</a>
+
+                                                <br>
+                                                <br>
+
+                                                <a class="a_buttons" href="{{ url_for('update_tool', tool_id = tool.id ) }}">
+                                                    <button>Edit Tool</button>
+                                                </a>
+                                            {% endif %}
+            
+                                            <br>
+                                            <br>
+                                            
+                                            {{ tool.description  | truncate(100) | safe }}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p>This person is not currently lending any tools.</p>
+        {% endif %}
+
+
+        <br>
+        <br>
+
+        <h2>People who have swapped tools with {{ user.firstname }} {{ user.lastname }} said:</h2>
+
+        <!--don't allow user to post review on their own page-->
+        {% if not current_user.id == user.id %}
+        <div id='write_a_review'>
+
+            <form method='POST' action="{{ url_for('post_user_review', reviewed_user_id=user.id) }}"><!--not current_user - there is an object called user passed to this page when loaded which is the user whose page is being viewed-->{# onsubmit="this.reset()">#}
+                <div id="rating_div">
+                    <h3 style="display:inline-block;">{{ form.rating.label }}</h3> &nbsp;&nbsp; <span id="rating_dropdown">{{ form.rating }}</span>
+                </div>
+
+                <div id="write_a_review_bottom" style="width: 530px;">
+
+                    <div id="textarea_div" style="width: 100%;">
+                        <h3>{{ form.comment.label }} </h3>
+                        <span>{{ form.comment }}</span>
+                    </div>
+                    
+                    <input type="submit" value='Submit' name="submit_review_button">
+
+                </div>
+            </form>
+    
+        </div>
+
+        
+
+        {% endif %}
+
+        <br>
+
+        {% if reviews|length == 0 %}
+            <p>There are no reviews posted for this person yet.</p>
+        {% endif %}
+
+        <div id='posted_reviews'>
+            
+            {% for review in reviews %}
+
+            <div Class="padding">
+            <div>
+    
+                <p>
+                    Author: {{ review.reviewing_user.firstname }} {{ review.reviewing_user.lastname }}
+                    &nbsp;reviewed {{ review.reviewed_user.firstname }} {{ review.reviewed_user.lastname }}
+                    &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;Rating:
+                    <!--show review /5 using stars-->
+                    {% for i in range(review.rating|int) %}
+                        &#9733;
+                    {% endfor %}
+                    {% for i in range(5-review.rating|int) %}
+                        &#9734;
+                    {% endfor %}
+                </p>
+                
+                <div Class="padding">
+                    <p id='date'><em>Date: {{ review.date }} (UTC)</em></p>
+                    <p id='old_comment'>{{ review.comment }}</p>
+                </div>
+    
+                {% if current_user.is_authenticated %}
+    
+                    {% if review.reviewing_user_id == current_user.id or current_user.user_role_id == 2 %}
+                    <a href="{{ url_for('remove_review', review_id=review.id) }}">
+                        <button id="remove_button" value="Remove" name="submit_remove_review">Remove</button>
+                    </a>
+                        {% endif %}
+    
+                {% endif %}
+                
+    
+            </div>
+            <br>
+
+            <hr>
+            </div>
+        {% endfor %}
+    
+        </div>
+    </div>
+    </div>
+    
+{% endblock content %}

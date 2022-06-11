@@ -1,0 +1,315 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div Class="padding">
+        <h1>Account Page</h1>
+        {% if current_user.user_role.id == 2 %}
+            <span><a href="{{ url_for('admin')}}">Admin Dashboard</a></span>
+        {% endif %}
+    </div>
+    <div>
+        <div >
+            <div id="profile_pic_div">
+                {% if current_user.profile_pic|length > 0 %}
+                    <img class="profile_pic_img" src="{{ url_for('static', filename='img/' + current_user.profile_pic + '.jpg') }}">
+                {% else %}
+                    <span>Add a profile pic</span>
+                {% endif %}
+            </div>
+            <br>
+            <div>
+                <h2>Hello: {{ current_user.firstname }} {{ current_user.lastname }}</h2>
+                {% if not current_user.user_role.id == 2 %}
+                <h3>Current funds: {{ current_user.balance }} Tokens</h3>
+                {% endif %}
+            </div>
+        </div>
+        <br>
+
+        {% if not current_user.user_role.id == 2 %}
+            <div class="add-funds">
+                <br>
+                <a id="add_funds" href="{{ url_for('add_funds') }}"> Add Funds </a> <!-- style="border: 2px solid blue; border-radius: 7px; padding: 10px 20px"> Add Funds</a>-->
+                <br>
+                <br>
+                <br>
+            </div>
+
+            <br>
+        {% endif %}
+        <hr>
+        <br>
+        
+        {% if not current_user.user_role.id == 2 %}
+            <!-- if they are lender -->
+            <h2>Lending Messages</h2>
+            {% if lending_message_threads.pages > 0 %}
+                {% for message_thread in lending_message_threads.items %}
+                    <div class="padding">
+                        <span class="message-name">{{ message_thread.tool_swap.borrower.displayname }}</span>
+                        <span class="message-date">({{ message_thread.date_created.strftime('%H:%M:%S | %d %b %Y') }})</span>
+                        {% if message_thread.is_active %}
+                        <span class="message-status-open">(Open)</span>
+                        {% else %}
+                        <span class="message-status-closed">(Closed)</span>
+                        {% endif %}
+                        <br>
+                        Message Count: <span class="message-count">{{ message_thread.message_count }}</span>
+                        <br>
+                        <a href="{{ url_for('message', thread_id = message_thread.id ) }}">See messages</a>
+                        <br>
+                        <br>
+                    </div>
+                {% endfor %}
+                
+                <!-- Pagination Links-->
+                <div class="text-right">
+                    <a href="{{ url_for('account', lending_page=lending_message_threads.prev_num) }}"
+                        {% if lending_message_threads.page == 1 %}style="pointer-events: none; cursor: default;"{% endif %}">
+                        &laquo;
+                    </a>
+                    {% for page_num in lending_message_threads.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                        {% if page_num %}
+                            {% if lending_message_threads.page == page_num %}
+                                <a href="{{url_for('account', lending_page=page_num)}}">{{page_num}}</a>
+                            {% else %}
+                                <a href="{{url_for('account', lending_page=page_num)}}">{{page_num}}</a>
+                            {% endif %}
+                        {%else%}
+                        ...
+                        {% endif%}
+                    {% endfor %}
+                    <a href="{{ url_for('account', lending_page=lending_message_threads.next_num) }}"
+                        {% if lending_message_threads.page == lending_message_threads.pages %}
+                        style="pointer-events: none; cursor: default;"{% endif %}">
+                            &raquo;
+                    </a>
+                </div>
+                <p>
+                    Showing page {{ lending_message_threads.page }} of {{ lending_message_threads.pages }}
+                </p>
+            {% else %}
+                <p>No messages here - List more tools :)</p>
+            {% endif %}
+        
+            <br>
+            <hr>
+            <br>
+        
+            <!-- if they are borrower -->
+            <h2>Borrowing Messages</h2>
+            {% if borrowing_message_threads.pages > 0 %}
+                {% for message_thread in borrowing_message_threads.items %}
+                    <div class="padding">
+                        <span class="message-name">{{ message_thread.tool_swap.lender.displayname }}</span>
+                        <span class="message-date">({{ message_thread.date_created.strftime('%H:%M:%S | %d %b %Y') }})</span>
+                        {% if message_thread.is_active %}
+                        <span class="message-status-open">(Open)</span>
+                        {% else %}
+                        <span class="message-status-closed">(Closed)</span>
+                        {% endif %}
+                        <br>
+                        Message Count: <span class="message-count">{{ message_thread.message_count }}</span>
+                        <br>
+                        <a href="{{ url_for('message', thread_id = message_thread.id ) }}">See messages</a>
+                        <br>
+                        <br>
+                    </div>
+                {% endfor %}
+                
+                <!-- Pagination Links-->
+                <div class="text-right">
+                    <a href="{{ url_for('account', borrowing_page=borrowing_message_threads.prev_num) }}"
+                        {% if borrowing_message_threads.page == 1 %}style="pointer-events: none; cursor: default;"{% endif %}">
+                        &laquo;
+                    </a>
+                    {% for page_num in borrowing_message_threads.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                        {% if page_num %}
+                            {% if borrowing_message_threads.page == page_num %}
+                                <a href="{{url_for('account', borrowing_page=page_num)}}">{{page_num}}</a>
+                            {% else %}
+                                <a href="{{url_for('account', borrowing_page=page_num)}}">{{page_num}}</a>
+                            {% endif %}
+                        {%else%}
+                        ...
+                        {% endif%}
+                    {% endfor %}
+                    <a href="{{ url_for('account', borrowing_page=borrowing_message_threads.next_num) }}"
+                        {% if borrowing_message_threads.page == borrowing_message_threads.pages %}
+                        style="pointer-events: none; cursor: default;"{% endif %}">
+                            &raquo;
+                    </a>
+                </div>
+                <p>
+                    Showing page {{ borrowing_message_threads.page }} of {{ borrowing_message_threads.pages }}
+                </p>
+            {% else %}
+                <p>No messages here - Go borrow something :-p</p>
+            {% endif %}
+
+            <br>
+            <hr>
+            <br>
+            <br>
+        {% endif %}
+
+        <div>
+            <h3>Update account details</h3>
+            <form method="POST" action="" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <fieldset> 
+                    <div>
+                        {{ form.image.label() }}
+                        <br>
+                        <div class="padding">
+                            {% if form.image.errors %}
+                                {{ form.image()}}
+                                <div>
+                                    {% for error in form.image.errors %}
+                                    <span style="color: red;">{{ error }}</span></br>
+                                    {% endfor %}
+                                </div>
+                            {% else %}    
+                                {{ form.image()}}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        {{ form.firstname.label() }}
+                        <br>
+                        {% if form.firstname.errors %}
+                            {{ form.firstname() }}
+                            <div>
+                                {% for error in form.firstname.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}                        
+                            {{ form.firstname() }}
+                        {% endif %}
+                    </div>
+                    <br>
+
+
+                    <div>
+                        {{ form.lastname.label() }}
+                        <br>
+                        <div class="padding">
+                            {% if form.lastname.errors %}
+                                {{ form.lastname()}}
+                                <div>
+                                    {% for error in form.lastname.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}                        
+                                {{ form.lastname() }}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div>
+                        {{ form.displayname.label() }}
+                        <br>
+                        <div class="padding">
+                            {% if form.displayname.errors %}
+                                {{ form.displayname()}}
+                                <div>
+                                    {% for error in form.displayname.errors %}
+                                        <span style="color: red;">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}                        
+                                {{ form.displayname() }}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <br>
+
+                    <div>
+                        {{ form.email.label() }}
+                        <br>
+                        <div class="padding">
+                        {% if form.email.errors %}
+                            {{ form.email()}}
+                            <div>
+                                {% for error in form.email.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}                        
+                            {{ form.email() }}
+                        {% endif %}
+                    </div>
+                    <br>
+                    <div>
+                        {{ form.first_line.label() }}
+                        <br>
+                        {% if form.first_line.errors %}
+                            {{ form.first_line()}}
+                            <div>
+                                {% for error in form.first_line.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}                        
+                            {{ form.first_line() }}
+                        {% endif %}
+                    </div>
+                    <br>
+                    <div>
+                        {{ form.second_line.label() }}
+                        <br>
+                        {% if form.second_line.errors %}
+                            {{ form.second_line()}}
+                            <div>
+                                {% for error in form.second_line.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}                        
+                            {{ form.second_line() }}
+                        {% endif %}
+                    </div>
+                    <br>
+                    <div>
+                        {{ form.city.label() }}
+                        <br>
+                        {% if form.city.errors %}
+                            {{ form.city()}}
+                            <div>
+                                {% for error in form.city.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}                        
+                            {{ form.city() }}
+                        {% endif %}
+                    </div>
+                    <br>
+                    <div>
+                        {{ form.postcode.label() }}
+                        <br>
+                        {% if form.postcode.errors %}
+                            {{ form.postcode()}}
+                            <div>
+                                {% for error in form.postcode.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}                        
+                            {{ form.postcode() }}
+                        {% endif %}
+                    </div>
+                </fieldset>
+                <br>
+                <div>
+                    {{ form.submit( class='btn' ) }}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

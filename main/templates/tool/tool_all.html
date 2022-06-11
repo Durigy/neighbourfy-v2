@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block content %}
+    <form method="POST" action="{{url_for('search')}}">
+      {{form.hidden_tag()}}
+      <input type="search" placeholder="Search", name="searched">
+      <button type="submit">Search</button>
+    </form>
+
+    <div > 
+            <br>
+            {% for tool_post in tool_posts.items %}
+                <div style="border: 1px rgb(255, 123, 0) solid; padding: 10px; margin-bottom: 10px; border-radius: 7px;">
+                    {% if tool_post.feature_image | length > 0 %} 
+                        <div>
+                            <a href="{{ url_for('single_tool', tool_id = tool_post.id ) }}">
+                                <img src="{{ url_for('static', filename='img/' + tool_post.feature_image + '.jpg') }}">
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    <div Class="tool-all">
+                        <h2>{{ tool_post.title.capitalize() }}</h2>
+                        <div Class= "padding"><p>
+                            <strong>Posted on:</strong> {{ tool_post.listed_date.date() }}
+                        </p></div>
+                        <div Class= "padding"><p>
+                            <strong>Description:</strong> {{ tool_post.description  | truncate(250) | safe }}
+                        </p></div>
+                        <div ><a href="{{ url_for('single_tool', tool_id = tool_post.id ) }}">See tool</a></div>
+                    </div>
+                </div>
+                
+            {% endfor %}
+        </div>
+
+    <!-- Pagination Links-->
+    <div class="text-right">
+        <a href="{{ url_for('all_tools', page=tool_posts.prev_num) }}"
+            {% if tool_posts.page == 1 %}style="pointer-events: none; cursor: default;"{% endif %}">
+            &laquo;
+        </a>
+        {% for page_num in tool_posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+                {% if tool_posts.page == page_num %}
+                    <a href="{{url_for('all_tools', page=page_num)}}">{{page_num}}</a>
+                {% else %}
+                    <a href="{{url_for('all_tools', page=page_num)}}">{{page_num}}</a>
+                {% endif %}
+            {%else%}
+            ...
+            {% endif%}
+        {% endfor %}
+        <a href="{{ url_for('all_tools', page=tool_posts.next_num) }}"
+            {% if tool_posts.page == tool_posts.pages %}
+            style="pointer-events: none; cursor: default;"{% endif %}">
+                &raquo;
+        </a>
+    </div>
+    <p>
+        Showing page {{ tool_posts.page }} of {{ tool_posts.pages }}
+    </p>
+{% endblock %}

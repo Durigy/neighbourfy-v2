@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block content %}
+    <form method="POST" action="" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <fieldset> 
+            <legend>{{ legend }}</legend>
+            <div>
+                {{ form.image.label() }}
+                <br>
+                {{ form.image() }}
+                
+                {% if form.image.errors %}
+                    <div>
+                        {% for error in form.image.errors %}
+                            <span style="color: red;">{{ error }}</span><br>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <br>
+            <h3>Borrowed condition is preselected </h3>
+            <div>
+                <label for="condition">Condition *</label>
+                <br>
+                <br>
+                <select name="condition" id="condition" required>
+                    <option value="">Select Condition</option>
+                    {% for condition in conditions %}
+                        <option value="{{ condition.id }}" {% if (condition.id == condition_preset) %} selected {% endif %}>{{ condition.condition }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <br>
+            <div>
+                <label for="status">Status *</label>
+                <br>
+                <select name="status" id="status" required>
+                    <option value="">Select Status</option>
+                    {% for status in statuses %}
+                        <option value="{{ status.id }}" {% if (status.id == status_preset) %} selected {% endif %}>{{ status.status }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </fieldset>
+
+        <br>
+
+        <div>
+            {{ form.submit( class='btn' ) }}
+        </div>
+    </form>
+{% endblock %}

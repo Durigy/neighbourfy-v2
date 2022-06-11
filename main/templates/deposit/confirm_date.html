@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div>
+        <h3>Ready to confirm a return date?</h3>
+            
+        <div>
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <fieldset> 
+                    <legend>{{ legend }}</legend>
+                    <div>
+                        {{ form.date.label() }}
+                        
+                        </br>
+                        £ {{ form.date() }}
+    
+                        {% if form.date.errors %}
+                            <div>
+                                {% for error in form.date.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </fieldset>
+
+                </br>
+
+                <div>
+                    {{ form.submit( class='btn' ) }}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

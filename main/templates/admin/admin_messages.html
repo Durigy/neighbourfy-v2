@@ -1,0 +1,20 @@
+{% extends "admin/admin_dashboard.html" %}
+{% block admin_content %}
+
+    {% for message in messages %}
+    <tr>
+        <td style="padding-right: 100px;">
+            {{ message.user.displayname }}
+        </td>
+        <td style="padding-right: 100px;">
+            {{ message.title }}
+        </td>
+        <td>
+            <a href="#">
+                view
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+
+{% endblock admin_content %}

@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block content %}
+    <div>
+        <H1>Login Page</H1>
+
+        <div class="form">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset>
+                
+                <div>
+                    {{ form.displayname_email.label() }}
+                
+                    </br>
+
+                    <div class="padding">
+                    {% if form.displayname_email.errors %}
+                        {{ form.displayname_email()}}
+                        <div>
+                            {% for error in form.displayname_email.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}                        
+                        {{ form.displayname_email() }}
+                    {% endif %}
+                    </div>
+
+                </div>
+                </br>
+
+
+                <div>
+                    {{ form.password.label() }}
+                
+                    </br>
+                    
+                    <div class="padding">
+                    {% if form.password.errors %}
+                        {{ form.password()}}
+                        <div>
+                            {% for error in form.password.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}                        
+                        {{ form.password() }}
+                    {% endif %}
+                    </div>
+                </div>
+                </br>
+                <div>
+                    {{ form.remember() }}
+                    {{ form.remember.label() }}
+                </div>
+            </fieldset>
+
+            </br>
+        
+            <div>
+                {{ form.submit( class='btn' ) }}
+            </div>
+            
+            <!-- </br>
+        
+             <div>
+                <a href="#">Forgot Password?</a>
+            </div> -->
+            
+        </form>
+        </div>
+    </div>
+
+    <div>
+        Need an account? <a href="{{ url_for('register') }}">Register Now!</a>
+    </div>
+
+{% endblock content %}

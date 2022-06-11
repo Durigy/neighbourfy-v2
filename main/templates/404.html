@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Page Not Found</h1>
+    <div Class="padding">
+        <p>We are very sorry
+        {% if current_user.is_authenticated %}
+            {{ current_user.firstname }}
+        {% endif %}
+    but this page cannot be found.</p>
+  <p>Go to <a href="{{ url_for('index') }}">Home</a></p>
+</div>
+{% endblock %}

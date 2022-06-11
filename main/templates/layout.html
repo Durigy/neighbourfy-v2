@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Neighbourfy
+            {% if title  != null %}
+                - {{ title }}
+            {% endif %}
+        </title>
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}"/>
+    </head>
+
+
+    <body>
+        <div class="wrapper">
+            <div class="multi_color_border"></div>
+            <div class="top_nav">
+                <div class="left">
+                    <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='logo.png') }}">
+                    </a>
+              </div> 
+
+              <div class="right">
+                <ul>
+                    {% if current_user.is_authenticated %}
+                        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                        {% if current_user.user_role.id == 2 %}
+                            <li><a href="{{ url_for('admin') }}">Admin Area</a></li>
+                        {% endif %}
+
+                    {% else %}
+                        <li><a href="{{ url_for('register') }}">Register</a></li>
+                        <li><a href="{{ url_for('login') }}">Login</a></li>              
+                    {% endif %}
+                </ul>
+              </div>
+            </div>
+
+            <div class="bottom_nav">
+              <ul>
+                    <li><a href="{{ url_for('all_tools') }}">Tools</a></li>
+
+                    {% if current_user.is_authenticated %}
+                        <!-- <li><a href="{{ url_for('account') }}">Account</a></li> -->
+
+                        {% if current_user.user_role.id != 2 %}
+                            <li><a href="{{ url_for('new_tool') }}">Post A Tool</a></li>
+                            
+                            <li><a href="{{ url_for('account_public', user_id = current_user.id) }}">Public Profile</a></li>
+                        {% endif %}
+                        
+                        <li><a href="{{ url_for('account') }}">Account</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('about') }}">About</a></li>
+                    {% endif %}
+              </ul>
+          </div>
+
+
+
+        
+        <div class="container">
+            <div>
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <br>
+                            <div class=flashes>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+
+            <div class="content">
+                <br>
+                {% block content %}
+
+                {% endblock %}
+            <br>
+            </div>
+        </div>
+    </body>
+</html>

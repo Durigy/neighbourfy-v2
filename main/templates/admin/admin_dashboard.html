@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    <h1>Welcome to the Admin Dashboard, {{ current_user.username }}</h1>
+
+    <div class="admin_nav">
+        <ul>
+            <li><a href="{{ url_for('admin')}}">Home</a></li>
+            <li><a href="{{ url_for('admin_user_roles')}}">User Roles</a></li>
+            <li><a href="#">Help Requests</a></li>
+            <li><a href="#">Money</a></li>
+            <li><a href="#">Recent Reviews</a></li>
+        </ul>
+    </div>
+
+    <div id="admin_content">
+        <br>
+        {% block admin_content %}
+
+        {% endblock %}
+    </div>
+    
+{% endblock %}

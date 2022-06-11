@@ -1,0 +1,25 @@
+{% extends "admin/admin_dashboard.html" %}
+{% block admin_content %}
+    <div class="list-items"></div>
+    <table>
+        <tr style="text-align: left;">
+            <th>User</th>
+            <th>Role</th>
+        </tr>
+        {% for item in list_display %}
+            <tr>
+                <td style="padding-right: 100px;">
+                    {{ item.displayname }}
+                </td>
+                <td style="padding-right: 100px;">
+                    {{ item.user_role.role }}
+                </td>
+                <td>
+                    <a href="{{ url_for('admin_edit_user_role', user_id=item.id) }}">
+                        Edit
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock admin_content %}

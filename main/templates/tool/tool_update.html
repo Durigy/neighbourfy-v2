@@ -1,0 +1,252 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="padding">
+    <h2 style="text-align: center"><a href="{{ url_for('single_tool', tool_id = tool_id ) }}">See tool live</a></h2>
+    </div>
+    <div>
+        <div>
+            <form method="POST" action="" enctype="multipart/form-data">
+                {{ form.hidden_tag() }}
+                <fieldset> 
+            
+                    <div class="padding"><h3 >General Info</h3></div>
+
+                    <div>
+                        {{ form.title.label() }}
+                        
+                        </br>
+                        <div class="padding">
+                        {{ form.title() }}
+    
+                        {% if form.title.errors %}
+                            <div>
+                                {% for error in form.title.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    </div>
+                    </br>
+
+                    <div>
+                        {{ form.value.label() }}
+    
+                        </br>
+                        <div class="padding">
+                        £ {{ form.value(min = 1, step = 1) }}
+
+                        {% if form.value.errors %}
+                            <div>
+                                {% for error in form.value.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    </br>
+                    </div>
+
+
+                    <div>
+                        {{ form.lend_duration.label() }}
+    
+                        </br>
+                        <div class="padding"> 
+                        {{ form.lend_duration(min = 1, step = 1) }} Days
+
+                        {% if form.lend_duration.errors %}
+                            <div>
+                                {% for error in form.lend_duration.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    </div>
+                    </br>
+
+
+                    <div class="padding"><h3 >Tool Images</h3></div>
+
+                    <div>
+                        {{ form.feature_image.label() }}
+                        </br>
+                        <div class="padding">
+                        {{ form.feature_image() }}
+                        
+                        {% if form.feature_image.errors %}
+                            <div>
+                                {% for error in form.feature_image.errors %}
+                                    <span style="color: red;">{{ error }}</span></br>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <br>
+                        {% if tool.feature_image != '' %}
+                            <img src="{{ url_for('static', filename='img/' + tool.feature_image + '.jpg') }}" height=150>
+                            <br>
+                            {#{ form.remove_feature_image() }#}
+                            {#{ form.remove_feature_image.label() }#}
+                        {% endif %}
+                        </div>
+                    </div>
+                    <!-- </br>
+                    <div>
+                        {#{ form.image_1.label() }#}
+                        </br>
+                        <div class="padding">
+                        {#{ form.image_1() }#}
+                        
+                        {#% if form.image_1.errors %#}
+                            <div>
+                                {#% for error in form.image_1.errors %#}
+                                    <span style="color: red;">{#{ error }#}</span></br>
+                                {#% endfor %#}
+                            </div>
+                        {#% endif %#}
+                        <br>
+                        {#% if tool.image_1 != '' %#}
+                            <img src="{#{ url_for('static', filename='img/' + tool.image_1 + '.jpg') }#}" height=150>
+                            <br>
+                            {#{ form.remove_image_1() }#}
+                            {#{ form.remove_image_1.label() }#}
+                        </div>
+                    </div>
+                    </br>
+
+
+                    <div>
+                        {#{ form.image_2.label() }#}
+                        </br>
+                        <div class="padding">
+                        {#{ form.image_2() }#}
+                        {#% if form.image_2.errors %#}
+                            <div>
+                                {#% for error in form.image_2.errors %#}
+                                    <span style="color: red;">{#{ error }#}</span></br>
+                                {#% endfor %#}
+                            </div>
+                        {#% endif %#}
+                        <br>
+                        {#% if tool.image_2 != '' %#}
+                            <img src="{#{ url_for('static', filename='img/' + tool.image_2 + '.jpg') }#}" height=150>
+                            <br>
+                            {#{ form.remove_image_2() }#}
+                            {#{ form.remove_image_2.label() }#}
+                        {#% endif %#}
+                        </div>
+                    </div>
+                    </br>
+
+
+                    <div>
+                        {#{ form.image_3.label() }#}
+                        </br>
+                        <div class="padding">
+                        {#{ form.image_3() }#}
+                        
+                        {#% if form.image_3.errors %#}
+                            <div>
+                                {#% for error in form.image_3.errors %#}
+                                    <span style="color: red;">{#{ error }#}</span></br>
+                                {#% endfor %#}
+                            </div>
+                        {#% endif %#}
+                        <br>
+                        {#% if tool.image_3 != '' %#}
+                            <img src="{#{ url_for('static', filename='img/' + tool.image_3 + '.jpg') }#}" height=150>
+                            <br>
+                            {#{ form.remove_image_3() }#}
+                            {#{ form.remove_image_3.label() }#}
+                        {#% endif %#}
+                        </div>
+                    </div>
+                    </br>
+
+                    <div>
+                        {#{ form.image_4.label() }#}
+                        </br>
+                        <div class="padding">
+                        {#{ form.image_4() }#}
+                        
+                        {#% if form.image_4.errors %#}
+                            <div>
+                                {#% for error in form.image_4.errors %#}
+                                    <span style="color: red;">{#{ error }#}</span></br>
+                                {#% endfor %#}
+                            </div>
+                        {#% endif %#}
+                        <br>
+                        {#% if tool.image_4 != '' %#}
+                            <img src="{#{ url_for('static', filename='img/' + tool.image_4 + '.jpg') }#}" height=150>
+                            <br>
+                            {#{ form.remove_image_4() }#}
+                            {#{ form.remove_image_4.label() }#}
+                        {#% endif %#}
+                    </div>
+                    </br> -->
+                    <div class="padding"><h3 >Additional Information</h3></div>
+                    <div>
+                        {{ form.description.label() }}
+    
+                        </br>
+                        <div class="padding">
+                        {{ form.description( cols = form_cols , rows = form_rows ) }}
+
+                        {% if form.description.errors %}
+                            <div>
+                                {% for error in form.description.errors %}
+                                    <span style="color: red;">{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        </div>
+                    </div>
+                    </br>
+
+
+                    <div>
+                        <label for="condition">Condition *</label>
+                        <br>
+                        <div class="padding">
+                        <select name="condition" id="condition" required>
+                            <option value="">Select Condition</option>
+                            {% for condition in conditions %}
+                                <option value="{{ condition.id }}" {% if (condition.id == condition_preset) %} selected {% endif %}>{{ condition.condition }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    </div>
+                    </br>
+
+
+                    <div>
+                        <label for="status">Status *</label>
+                        <br>
+                        <div class="padding">
+                        <select name="status" id="status" required>
+                            <option value="">Select Status</option>
+                            {% for status in statuses %}
+                                <option value="{{ status.id }}" {% if (status.id == tool.status_id) %} selected {% endif %}>{{ status.status }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    </div>
+                    </br>
+                    <div>
+                        {{ form.is_draft() }}
+                        {{ form.is_draft.label() }}
+                    </div>
+                </fieldset>
+
+                </br>
+
+                <div>
+                    {{ form.submit( class='btn' ) }}
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
