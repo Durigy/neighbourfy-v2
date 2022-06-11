@@ -1,83 +1,44 @@
-# neighbourfy
+# Neighbourfy
 
------------------------------------------------------
+This is an expansion of our Cardiff University year 2 group project
 
-## Github + Trello
+The aim of the project/site is to allow communities to lend tools to each other for a short period. This is to reduce the need for buying a tool, use it once or twice and get left in the shed, only to become waste. 
 
-When commiting changes use **3 - Kanban Dev Board** trello board.
-add the #x at the start of every commit to signify card you are working on 
-
-i.g.:
-
-    > git commit -m "#1 inital commit to of the project"
-
------------------------------------------------------
-
-Required set up configurations:
-
-Create a virtual environment in the neighbourfy/ folder using the following windows (or equivalent) terminal commands
-
-    > py -m venv venv
-
-    > venv\Scripts\activate
-
-    > py -m pip install -r requirements.txt
-
-note: if you do not activate the Venv before installing the requirements.txt,
-then it will be installed to your main python directory
-
------------------------------------------------------
-
-Create a file in neighbourfy/main/ called 'config.py'
-
-should follow this structure:
-
-```python
-from datetime import timedelta
-secret_key = '<- add secret key here ->'
-database_uri = 'mysql+pymysql://<- DB Username ->:<- DB Password ->@<- DB domain/IP (localhost normally) ->/<- DB Name ->'
-debug_setting = True
-remember_cookie_duration = timedelta(days=1)
-sqlalchemy_track_modifications = False
-```
-*Note: replace the <- -> with the correct info*
-
-- if on local computer then leave out ':<- DB Password ->'
-to look something like this: 'mysql+pymysql://root@localhost/neighbourfy'
+## Users of the site can:
+- search for a tool using:
+  - a search bar
+  - different sorting methods ( coming soon )
+  - filtering ( coming soon )
+- place a deposit on the desired tool they wish to borrow
+- borrower and lender can communicate via a messaging portal for details on 
+  - time and place to collect the tool
+  - duration of lending
+  - any other must knows about using the tool
+- after the lender has finished they can return the tool
+  - with a photo and the condition of the tool upon return
+- a borrower can review a lender and will be displayed on the lender's public profile
 
 
-secret_key: Use the following commands to generate a secret key:
+# Iamge of the site
+### Home page
 
-    > python
 
-    >>> import os
+### About page
 
-    >>> os.urandom(24).hex()
 
------------------------------------------------------
+### Login page
 
-Once the models.py file is updated you can use the following commands
-to add the tables to your local database for testing:
 
-    > python
+### Register page
 
-    >>> from main import db
 
-    >>> db.create_all()
+### Search/all tools page
 
------------------------------------------------------
 
-## database must does
+### Single tool page
 
-you must add user roles before any users can be added to the site
 
-the minimum must be 
+### Account page
 
-id: 1 -> User
-id: 2 -> Admin
 
------------------------------------------------------
-
-## to run the site
-
-use the 'passenger_wsgi.py'
+### Public profile page
