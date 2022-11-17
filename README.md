@@ -2,6 +2,14 @@
 
 This is an expansion of our Cardiff University year 2 group project
 
+Worked on by:
+- Bence Barkanyi
+- Somaya Goraine
+- Ioannis-Marios Stavropoulos
+- Elinor Jones
+- Haoyu Yin
+- Alex Deverson
+
 The aim of the project/site is to allow communities to lend tools to each other for a short period. This is to reduce the need for buying a tool, use it once or twice and get left in the shed, only to become waste. 
 
 ## Users of the site can:
@@ -19,7 +27,7 @@ The aim of the project/site is to allow communities to lend tools to each other 
 - a borrower can review a lender and will be displayed on the lender's public profile
 
 
-# Iamge of the site
+# Iamges of the site
 ### Home page
 ![home page](https://user-images.githubusercontent.com/56241583/173206904-b083989c-cb77-4ede-8536-021c8cdcea15.png)
 
