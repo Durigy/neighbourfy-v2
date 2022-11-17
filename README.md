@@ -27,7 +27,7 @@ The aim of the project/site is to allow communities to lend tools to each other 
 - a borrower can review a lender and will be displayed on the lender's public profile
 
 
-# Iamges of the site
+# Images of the site
 ### Home page
 ![home page](https://user-images.githubusercontent.com/56241583/173206904-b083989c-cb77-4ede-8536-021c8cdcea15.png)
 
